@@ -1,10 +1,358 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mini ChatGPT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mini ChatGPT</title>
+<style>
+body{margin:0;background:#0b1020;color:white;font-family:Arial;text-align:center}
+header{background:#20295a;padding:25px}
+h1{margin:0}.credit{color:#b8c4ff;margin-top:6px}
+main{max-width:950px;margin:auto;padding:20px}
+.box{background:#171d35;border:1px solid #48558d;border-radius:18px;padding:20px;margin:15px 0}
+button{background:#5368d8;color:white;border:0;border-radius:10px;padding:11px;margin:5px;font-weight:bold;cursor:pointer}
+input{padding:12px;border-radius:10px;border:0;width:65%;background:#080c18;color:white}
+#chatbox{height:180px;overflow:auto;background:#080c18;border-radius:12px;text-align:left;padding:10px}
+.msg{padding:9px;margin:6px;background:#252d4d;border-radius:10px}
+.you{background:#3b4d91;text-align:right}
+#race{display:none}
+.stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.stat{background:#0b1020;padding:12px;border-radius:10px}
+.stat b{display:block;font-size:24px}
+#track{height:330px;background:#292f43;border:3px solid #6875a5;border-radius:15px;position:relative;overflow:hidden}
+.line{position:absolute;top:0;bottom:0;width:16px}
+.start{left:20px;background:repeating-linear-gradient(45deg,#fff 0 8px,#111 8px 16px)}
+.finish{right:20px;background:repeating-linear-gradient(45deg,#fff 0 8px,#111 8px 16px)}
+.butt{position:absolute;font-size:32px;width:55px}
+.pad{position:absolute;background:#48d9ed;color:#001018;padding:10px;border-radius:8px;font-weight:bold}
+.ob{position:absolute;background:#e05a65;width:35px;height:55px;border-radius:8px}
+#secrets{position:fixed;right:12px;bottom:12px;background:#5368d8;padding:12px;border-radius:12px}
+#secretList{display:none;position:fixed;right:12px;bottom:65px;background:#171d35;border:2px solid #5368d8;padding:15px;border-radius:14px;text-align:left}
+.found{color:#65f29a}
+#boss{display:none}
+.bar{background:#401c45;height:18px;border-radius:10px}
+#hp{background:#ed61e8;height:100%;width:100%;border-radius:10px}
+#celebrate{display:none;font-size:28px}
+</style>
 </head>
+
 <body>
-  <h1>Mini ChatGPT</h1>
-  <p>Created by Ihsan 👑</p>
+
+<header>
+<h1>🤖 Mini ChatGPT</h1>
+<div class="credit">Created by Ihsan 👑</div>
+</header>
+
+<main>
+
+<div class="box">
+<button onclick="chatPage()">💬 Mini ChatGPT</button>
+<button onclick="racePage()">🐔 Chicken Butt Racing</button>
+</div>
+
+<section id="chatPage" class="box">
+<h2>💬 Mini ChatGPT</h2>
+<div id="chatbox">
+<div class="msg">Hi! I'm Mini ChatGPT! 🤖</div>
+</div>
+<br>
+<input id="input" placeholder="Type something...">
+<button onclick="send()">Send</button>
+</section>
+
+<section id="race" class="box">
+
+<h2>🐔 Chicken Butt Racing: Chaos Edition</h2>
+
+<button onclick="choose('🐔',8,5,4)">🐔 Speedy Butt</button>
+<button onclick="choose('🐥',6,9,5)">🐥 Tiny Turbo</button>
+<button onclick="choose('🥚',5,7,9)">🥚 Egg Butt</button>
+<button onclick="choose('💪',7,8,3)">💪 Mega Butt</button>
+
+<div class="stats">
+<div class="stat">Speed<b id="speed">-</b></div>
+<div class="stat">Boost<b id="boostStat">-</b></div>
+<div class="stat">Luck<b id="luck">-</b></div>
+</div>
+
+<br>
+
+<div id="track">
+<div class="line start"></div>
+<div class="line finish"></div>
+
+<div class="pad" style="left:220px;top:30px">⚡ SPEED</div>
+<div class="ob" style="left:360px;top:60px"></div>
+<div class="pad" style="left:500px;top:130px">⚡ SPEED</div>
+<div class="ob" style="left:650px;top:190px"></div>
+<div class="pad" style="left:790px;top:260px">⚡ SPEED</div>
+
+<div id="player" class="butt" style="left:40px;top:15px">🐔</div>
+<div id="enemy1" class="butt" style="left:40px;top:95px">🐥</div>
+<div id="enemy2" class="butt" style="left:40px;top:175px">🥚</div>
+<div id="enemy3" class="butt" style="left:40px;top:255px">🐔</div>
+</div>
+
+<br>
+
+<button onclick="startRace()">🏁 Start Race</button>
+<button onclick="boost()">🚀 BOOST (B)</button>
+<button onclick="throwButt()">💥 Throw Butt</button>
+<button onclick="moveButt()">↔️ Move</button>
+
+<p id="status">Choose your Chicken Butt!</p>
+
+<div id="celebrate">
+🎉🐔🐥🥚🐔🎉<br>
+CHICKEN BUTTS CELEBRATE!
+</div>
+
+<div id="boss" class="box">
+<h2>👾 GLITCH CHATGPT BOSS</h2>
+<div class="bar"><div id="hp"></div></div>
+<p id="bossText">Boss HP: 100</p>
+<button onclick="attack()">⚔️ Attack</button>
+<button onclick="glitchAttack()">⚡ Glitch Attack</button>
+</div>
+
+</section>
+
+</main>
+
+<button id="secrets" onclick="toggleSecrets()">🏅 Secrets <span id="counter">0/5</span></button>
+
+<div id="secretList">
+<h3>🏅 Secrets</h3>
+<div id="s1">⚡ Glitch World ❌</div>
+<div id="s2">📋 Copy Mini ChatGPT ❌</div>
+<div id="s3">🏁 Win Race ❌</div>
+<div id="s4">👾 Defeat Boss ❌</div>
+<div id="s5">🌟 Find All Secrets ❌</div>
+</div>
+
+<script>
+let racer=null;
+let racing=false;
+let x=40;
+let timer;
+let bossHP=100;
+let found=new Set();
+let audio;
+
+function sound(type){
+try{
+audio=audio||new(window.AudioContext||window.webkitAudioContext)();
+let o=audio.createOscillator();
+let g=audio.createGain();
+let freq={go:500,boost:700,throw:130,win:900,boss:100,attack:250,secret:1100}[type]||400;
+o.frequency.value=freq;
+o.type="square";
+g.gain.setValueAtTime(.08,audio.currentTime);
+g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.2);
+o.connect(g);
+g.connect(audio.destination);
+o.start();
+o.stop(audio.currentTime+.2);
+}catch(e){}
+}
+
+function chatPage(){
+document.getElementById("chatPage").style.display="block";
+document.getElementById("race").style.display="none";
+}
+
+function racePage(){
+document.getElementById("chatPage").style.display="none";
+document.getElementById("race").style.display="block";
+}
+
+function send(){
+let box=document.getElementById("input");
+let text=box.value.trim();
+if(!text)return;
+
+addMessage(text,"you");
+box.value="";
+
+if(text.toLowerCase().includes("glitch world")){
+addMessage("⚡ GLITCH LIGHTNING!!! Something woke up...");
+findSecret("glitch");
+sound("secret");
+racePage();
+}else{
+let replies=[
+"That's interesting! 😎",
+"I'm listening! 🤖",
+"Cool! Tell me more!",
+"🐔 Chicken Butt approves!",
+"I can help with that!"
+];
+addMessage(replies[Math.floor(Math.random()*replies.length)]);
+}
+}
+
+function addMessage(text,cls="msg"){
+let d=document.createElement("div");
+d.className="msg "+cls;
+d.textContent=text;
+let c=document.getElementById("chatbox");
+c.appendChild(d);
+c.scrollTop=c.scrollHeight;
+}
+
+document.addEventListener("copy",function(){
+findSecret("copy");
+sound("boss");
+addMessage("👀 SYSTEM ALERT: You copied Mini ChatGPT!");
+});
+
+function choose(icon,s,b,l){
+racer={icon,s,b,l};
+document.getElementById("player").textContent=icon;
+document.getElementById("speed").textContent=s;
+document.getElementById("boostStat").textContent=b;
+document.getElementById("luck").textContent=l;
+document.getElementById("status").textContent="Ready! Start the race!";
+}
+
+function startRace(){
+if(!racer){
+document.getElementById("status").textContent="Choose a Chicken Butt first!";
+return;
+}
+
+if(racing)return;
+
+racing=true;
+x=40;
+sound("go");
+document.getElementById("status").textContent="🏁 GO!";
+
+timer=setInterval(function(){
+
+x+=racer.s*.7+Math.random()*4;
+
+document.getElementById("player").style.left=x+"px";
+
+["enemy1","enemy2","enemy3"].forEach(function(id){
+let e=document.getElementById(id);
+let p=parseFloat(e.style.left)||40;
+e.style.left=(p+3+Math.random()*6)+"px";
+});
+
+if(x>800){
+clearInterval(timer);
+racing=false;
+findSecret("win");
+sound("win");
+document.getElementById("status").textContent="🏆 YOU WIN!";
+document.getElementById("celebrate").style.display="block";
+}
+
+},140);
+}
+
+function boost(){
+if(!racing)return;
+x+=racer.b*5;
+document.getElementById("player").style.left=x+"px";
+sound("boost");
+document.getElementById("status").textContent="🚀 BOOST!";
+}
+
+document.addEventListener("keydown",function(e){
+if(e.key.toLowerCase()=="b")boost();
+});
+
+function throwButt(){
+if(!racing)return;
+
+let enemies=["enemy1","enemy2","enemy3"];
+let id=enemies[Math.floor(Math.random()*3)];
+let e=document.getElementById(id);
+let p=parseFloat(e.style.left)||40;
+e.style.left=Math.max(40,p-70)+"px";
+
+sound("throw");
+document.getElementById("status").textContent="💥 BONK!";
+}
+
+function moveButt(){
+if(!racing)return;
+
+let p=document.getElementById("player");
+let positions=[15,95,175,255];
+let current=parseFloat(p.style.top)||15;
+let i=positions.indexOf(current);
+
+p.style.top=positions[(i+1)%4]+"px";
+sound("boost");
+}
+
+function findSecret(secret){
+found.add(secret);
+
+let map={
+glitch:"s1",
+copy:"s2",
+win:"s3",
+boss:"s4"
+};
+
+if(map[secret]){
+let e=document.getElementById(map[secret]);
+e.textContent=e.textContent.replace("❌","✅");
+e.className="found";
+}
+
+document.getElementById("counter").textContent=found.size+"/5";
+
+if(found.size>=4){
+document.getElementById("s5").textContent="🌟 Find All Secrets ✅";
+document.getElementById("s5").className="found";
+document.getElementById("status").textContent="🌟 FOUND ALL SECRETS!";
+sound("secret");
+}
+
+if(found.has("glitch")&&found.has("copy")){
+document.getElementById("boss").style.display="block";
+}
+}
+
+function toggleSecrets(){
+let e=document.getElementById("secretList");
+e.style.display=e.style.display=="block"?"none":"block";
+}
+
+function attack(){
+if(bossHP<=0)return;
+
+bossHP=Math.max(0,bossHP-(10+Math.floor(Math.random()*16)));
+sound("attack");
+updateBoss();
+}
+
+function glitchAttack(){
+if(bossHP<=0)return;
+
+bossHP=Math.max(0,bossHP-30);
+sound("boost");
+updateBoss();
+}
+
+function updateBoss(){
+document.getElementById("hp").style.width=bossHP+"%";
+document.getElementById("bossText").textContent="Boss HP: "+bossHP;
+
+if(bossHP<=0){
+findSecret("boss");
+sound("win");
+document.getElementById("bossText").textContent="👾 BOSS DEFEATED!";
+document.getElementById("celebrate").style.display="block";
+document.getElementById("status").textContent="🎉 BOSS DEFEATED! Chicken Butts celebrate!";
+}
+}
+</script>
+
 </body>
 </html>
